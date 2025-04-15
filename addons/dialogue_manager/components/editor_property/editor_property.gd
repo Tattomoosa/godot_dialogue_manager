@@ -2,12 +2,12 @@
 extends EditorProperty
 
 
-const DialoguePropertyEditorControl = preload("./editor_property_control.tscn")
+const DialoguePropertyEditorControl := preload("./editor_property_control.tscn")
 
 
 var editor_plugin: EditorPlugin
 
-var control = DialoguePropertyEditorControl.instantiate()
+var control := DialoguePropertyEditorControl.instantiate()
 var current_value: Resource
 var is_updating: bool = false
 

@@ -40,7 +40,7 @@ var selections: PackedStringArray = []
 func prepare() -> void:
 	input.grab_focus()
 
-	var template_label = result_template.get_node("Label")
+	var template_label := result_template.get_node("Label")
 	template_label.get_theme_stylebox(&"focus").bg_color = code_edit.theme_overrides.current_line_color
 	template_label.add_theme_font_override(&"normal_font", code_edit.get_theme_font(&"font"))
 
@@ -199,7 +199,7 @@ func _on_search_button_pressed() -> void:
 	self.current_results = find_in_files()
 
 
-func _on_input_text_submitted(new_text: String) -> void:
+func _on_input_text_submitted(_new_text: String) -> void:
 	_on_search_button_pressed()
 
 
@@ -210,7 +210,7 @@ func _on_replace_toggle_toggled(toggled_on: bool) -> void:
 	update_results_view()
 
 
-func _on_replace_input_text_changed(new_text: String) -> void:
+func _on_replace_input_text_changed(_new_text: String) -> void:
 	update_results_view()
 
 
@@ -222,7 +222,7 @@ func _on_replace_all_button_pressed() -> void:
 	replace_results(false)
 
 
-func _on_match_case_button_toggled(toggled_on: bool) -> void:
+func _on_match_case_button_toggled(_toggled_on: bool) -> void:
 	_on_search_button_pressed()
 
 

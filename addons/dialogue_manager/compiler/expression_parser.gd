@@ -307,6 +307,7 @@ func _check_next_token(token: Dictionary, next_tokens: Array[Dictionary], line_t
 	# Guard for assigning in a condition. If the assignment token isn't inside a Lua dictionary
 	# then it's an unexpected assignment in a condition line.
 	if token.type == DMConstants.TOKEN_ASSIGNMENT and line_type == DMConstants.TYPE_CONDITION and not next_tokens.any(func(t): return t.type == expected_close_token):
+		@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 		return DMConstants.ERR_UNEXPECTED_ASSIGNMENT
 
 	# Special case for a negative number after this one
@@ -425,13 +426,16 @@ func _check_next_token(token: Dictionary, next_tokens: Array[Dictionary], line_t
 	if (expected_token_types.size() > 0 and not next_token.type in expected_token_types or unexpected_token_types.size() > 0 and next_token.type in unexpected_token_types):
 		match next_token.type:
 			null:
+				@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 				return DMConstants.ERR_UNEXPECTED_END_OF_EXPRESSION
 
 			DMConstants.TOKEN_FUNCTION:
+				@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 				return DMConstants.ERR_UNEXPECTED_FUNCTION
 
 			DMConstants.TOKEN_PARENS_OPEN, \
 			DMConstants.TOKEN_PARENS_CLOSE:
+				@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 				return DMConstants.ERR_UNEXPECTED_BRACKET
 
 			DMConstants.TOKEN_COMPARISON, \
@@ -439,24 +443,33 @@ func _check_next_token(token: Dictionary, next_tokens: Array[Dictionary], line_t
 			DMConstants.TOKEN_OPERATOR, \
 			DMConstants.TOKEN_NOT, \
 			DMConstants.TOKEN_AND_OR:
+				@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 				return DMConstants.ERR_UNEXPECTED_OPERATOR
 
 			DMConstants.TOKEN_COMMA:
+				@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 				return DMConstants.ERR_UNEXPECTED_COMMA
 			DMConstants.TOKEN_COLON:
+				@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 				return DMConstants.ERR_UNEXPECTED_COLON
 			DMConstants.TOKEN_DOT:
+				@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 				return DMConstants.ERR_UNEXPECTED_DOT
 
 			DMConstants.TOKEN_BOOL:
+				@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 				return DMConstants.ERR_UNEXPECTED_BOOLEAN
 			DMConstants.TOKEN_STRING:
+				@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 				return DMConstants.ERR_UNEXPECTED_STRING
 			DMConstants.TOKEN_NUMBER:
+				@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 				return DMConstants.ERR_UNEXPECTED_NUMBER
 			DMConstants.TOKEN_VARIABLE:
+				@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 				return DMConstants.ERR_UNEXPECTED_VARIABLE
 
+		@warning_ignore("int_as_enum_without_match", "int_as_enum_without_cast")
 		return DMConstants.ERR_INVALID_EXPRESSION
 
 	return OK
@@ -495,8 +508,8 @@ func _tokens_to_dictionary(tokens: Array[Dictionary]) -> Dictionary:
 # Work out what the next token is from a string.
 func _find_match(input: String) -> Dictionary:
 	for key in regex.TOKEN_DEFINITIONS.keys():
-		var regex = regex.TOKEN_DEFINITIONS.get(key)
-		var found = regex.search(input)
+		var token_regex = regex.TOKEN_DEFINITIONS.get(key)
+		var found = token_regex.search(input)
 		if found:
 			return {
 				type = key,

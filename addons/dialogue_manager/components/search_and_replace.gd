@@ -211,7 +211,7 @@ func _on_input_focus_entered() -> void:
 		self.result_index = result_index
 
 
-func _on_match_case_check_box_toggled(button_pressed: bool) -> void:
+func _on_match_case_check_box_toggled(_button_pressed: bool) -> void:
 	search()
 
 

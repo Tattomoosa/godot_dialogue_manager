@@ -5,6 +5,7 @@
 class_name DialogueResource extends Resource
 
 
+@warning_ignore("shadowed_global_identifier")
 const DialogueLine = preload("./dialogue_line.gd")
 
 ## A list of state shortcuts

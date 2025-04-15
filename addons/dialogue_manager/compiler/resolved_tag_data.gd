@@ -16,8 +16,8 @@ func _init(text: String) -> void:
 	var tag_matches: Array[RegExMatch] = regex.TAGS_REGEX.search_all(text)
 	for tag_match in tag_matches:
 		text = text.replace(tag_match.get_string(), "")
-		var tags = tag_match.get_string().replace("[#", "").replace("]", "").replace(", ", ",").split(",")
-		for tag in tags:
+		var matched_tags = tag_match.get_string().replace("[#", "").replace("]", "").replace(", ", ",").split(",")
+		for tag in matched_tags:
 			tag = tag.replace("#", "")
 			if not tag in resolved_tags:
 				resolved_tags.append(tag)

@@ -44,11 +44,11 @@ func _get_preset_count() -> int:
 	return 0
 
 
-func _get_preset_name(preset_index: int) -> String:
+func _get_preset_name(_preset_index: int) -> String:
 	return "Unknown"
 
 
-func _get_import_options(path: String, preset_index: int) -> Array:
+func _get_import_options(_path: String, _preset_index: int) -> Array:
 	# When the options array is empty there is a misleading error on export
 	# that actually means nothing so let's just have an invisible option.
 	return [{
@@ -57,11 +57,11 @@ func _get_import_options(path: String, preset_index: int) -> Array:
 	}]
 
 
-func _get_option_visibility(path: String, option_name: StringName, options: Dictionary) -> bool:
+func _get_option_visibility(_path: String, _option_name: StringName, _options: Dictionary) -> bool:
 	return false
 
 
-func _import(source_file: String, save_path: String, options: Dictionary, platform_variants: Array[String], gen_files: Array[String]) -> Error:
+func _import(source_file: String, save_path: String, _options: Dictionary, _platform_variants: Array[String], _gen_files: Array[String]) -> Error:
 	var cache = Engine.get_meta("DMCache")
 
 	# Get the raw file contents

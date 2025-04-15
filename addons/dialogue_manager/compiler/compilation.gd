@@ -213,7 +213,7 @@ func import_content(path: String, prefix: String, imported_line_map: Dictionary,
 func build_line_tree(raw_lines: PackedStringArray) -> DMTreeLine:
 	var root: DMTreeLine = DMTreeLine.new("")
 	var parent_chain: Array[DMTreeLine] = [root]
-	var previous_line: DMTreeLine
+	var previous_line: DMTreeLine = null
 	var doc_comments: PackedStringArray = []
 
 	# Get list of known autoloads
@@ -425,6 +425,7 @@ func parse_condition_line(tree_line: DMTreeLine, line: DMCompiledLine, siblings:
 	)
 	# Any empty IDs should end the conversation.
 	if line.next_id_after == DMConstants.ID_NULL:
+		@warning_ignore("incompatible_ternary")
 		line.next_id_after = parent.next_id_after if parent != null and parent.next_id_after else DMConstants.ID_END
 
 	# Having no nested body is an immediate failure.
@@ -511,7 +512,7 @@ func parse_match_line(tree_line: DMTreeLine, line: DMCompiledLine, siblings: Arr
 	return result
 
 
-func parse_when_line(tree_line: DMTreeLine, line: DMCompiledLine, siblings: Array[DMTreeLine], sibling_index: int, parent: DMCompiledLine) -> Error:
+func parse_when_line(tree_line: DMTreeLine, line: DMCompiledLine, _siblings: Array[DMTreeLine], _sibling_index: int, parent: DMCompiledLine) -> Error:
 	var result: Error = OK
 
 	# This when line should be found inside a match line
@@ -608,7 +609,7 @@ func parse_response_line(tree_line: DMTreeLine, line: DMCompiledLine, siblings: 
 
 	parse_character_and_dialogue(tree_line, line, siblings, sibling_index, parent)
 
-	return OK
+	return result
 
 
 ## Parse a randomised line
@@ -869,6 +870,7 @@ func add_error(line_number: int, column_number: int, error: int) -> Error:
 				external_error = error,
 				external_line_number = line_number
 			})
+			@warning_ignore("int_as_enum_without_cast")
 			return error
 
 	# Otherwise, it's in this file
@@ -878,6 +880,7 @@ func add_error(line_number: int, column_number: int, error: int) -> Error:
 		error = error
 	})
 
+	@warning_ignore("int_as_enum_without_cast")
 	return error
 
 
@@ -1003,8 +1006,8 @@ func extract_static_line_id(text: String) -> String:
 
 ## Extract a condition (or inline condition) from some text.
 func extract_condition(text: String, is_wrapped: bool, index: int) -> Dictionary:
-	var regex: RegEx = regex.WRAPPED_CONDITION_REGEX if is_wrapped else regex.CONDITION_REGEX
-	var found: RegExMatch = regex.search(text)
+	var re: RegEx = regex.WRAPPED_CONDITION_REGEX if is_wrapped else regex.CONDITION_REGEX
+	var found: RegExMatch = re.search(text)
 
 	if found == null:
 		return {

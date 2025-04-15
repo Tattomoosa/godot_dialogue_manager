@@ -49,6 +49,7 @@ func _init(initial_id: String, initial_type: String) -> void:
 
 
 func _to_string() -> String:
+	@warning_ignore("incompatible_ternary")
 	var s: Array = [
 		"[%s]" % [type],
 		"%s:" % [character] if character != "" else null,

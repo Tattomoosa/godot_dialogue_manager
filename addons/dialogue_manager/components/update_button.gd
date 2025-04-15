@@ -60,7 +60,7 @@ func check_for_update() -> void:
 ### Signals
 
 
-func _on_http_request_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+func _on_http_request_request_completed(result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	if result != HTTPRequest.RESULT_SUCCESS: return
 
 	var current_version: String = Engine.get_meta("DialogueManagerPlugin").get_version()
@@ -88,8 +88,8 @@ func _on_update_button_pressed() -> void:
 		if will_refresh:
 			EditorInterface.restart_editor(true)
 	else:
-		var scale: float = EditorInterface.get_editor_scale()
-		download_dialog.min_size = Vector2(300, 250) * scale
+		var editor_scale: float = EditorInterface.get_editor_scale()
+		download_dialog.min_size = Vector2(300, 250) * editor_scale
 		download_dialog.popup_centered()
 
 
@@ -97,7 +97,7 @@ func _on_download_dialog_close_requested() -> void:
 	download_dialog.hide()
 
 
-func _on_download_update_panel_updated(updated_to_version: String) -> void:
+func _on_download_update_panel_updated(_updated_to_version: String) -> void:
 	download_dialog.hide()
 
 	needs_reload_dialog.dialog_text = DialogueConstants.translate(&"update.needs_reload")

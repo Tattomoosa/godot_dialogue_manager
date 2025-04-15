@@ -5,7 +5,7 @@ class_name DialogueResponsesMenu extends Container
 
 
 ## Emitted when a response is selected.
-signal response_selected(response)
+signal response_selected(response: DialogueResponse)
 
 
 ## Optionally specify a control to duplicate for each response

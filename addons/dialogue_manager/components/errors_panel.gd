@@ -2,7 +2,7 @@
 extends HBoxContainer
 
 
-signal error_pressed(line_number)
+signal error_pressed(line_number: int)
 
 
 const DialogueConstants = preload("../constants.gd")

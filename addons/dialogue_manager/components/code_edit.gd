@@ -103,7 +103,7 @@ func _gui_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 
 
-func _can_drop_data(at_position: Vector2, data) -> bool:
+func _can_drop_data(_at_position: Vector2, data) -> bool:
 	if typeof(data) != TYPE_DICTIONARY: return false
 	if data.type != "files": return false
 
@@ -133,13 +133,13 @@ func _drop_data(at_position: Vector2, data) -> void:
 			if cursor.x > -1 and cursor.y > -1:
 				set_cursor(cursor)
 				remove_secondary_carets()
-				insert_text("\"%s\"" % file, cursor.y, cursor.x)
+				insert_text("\"%s\"" % file, int(cursor.y), int(cursor.x))
 	grab_focus()
 
 
-func _request_code_completion(force: bool) -> void:
+func _request_code_completion(_force: bool) -> void:
 	var cursor: Vector2 = get_cursor()
-	var current_line: String = get_line(cursor.y)
+	var current_line: String = get_line(int(cursor.y))
 
 	if ("=> " in current_line or "=>< " in current_line) and (cursor.x > current_line.find("=>")):
 		var prompt: String = current_line.split("=>")[1]
@@ -174,8 +174,8 @@ func _request_code_completion(force: bool) -> void:
 		# Only show names starting with that character
 		var names: PackedStringArray = get_character_names(name_so_far)
 		if names.size() > 0:
-			for name in names:
-				add_code_completion_option(CodeEdit.KIND_CLASS, name + ": ", name.substr(name_so_far.length()) + ": ", theme_overrides.text_color, get_theme_icon("Sprite2D", "EditorIcons"))
+			for c_name in names:
+				add_code_completion_option(CodeEdit.KIND_CLASS, c_name + ": ", c_name.substr(name_so_far.length()) + ": ", theme_overrides.text_color, get_theme_icon("Sprite2D", "EditorIcons"))
 			update_code_completion_options(true)
 		else:
 			cancel_code_completion()
@@ -186,7 +186,7 @@ func _filter_code_completion_candidates(candidates: Array) -> Array:
 	return candidates
 
 
-func _confirm_code_completion(replace: bool) -> void:
+func _confirm_code_completion(_replace: bool) -> void:
 	var completion = get_code_completion_option(get_code_completion_selected_index())
 	begin_complex_operation()
 	# Delete any part of the text that we've already typed
@@ -210,8 +210,8 @@ func get_cursor() -> Vector2:
 
 # Set the caret from a Vector2
 func set_cursor(from_cursor: Vector2) -> void:
-	set_caret_line(from_cursor.y, false)
-	set_caret_column(from_cursor.x, false)
+	set_caret_line(int(from_cursor.y), false)
+	set_caret_column(int(from_cursor.x), false)
 
 
 # Check if a prompt is the start of a string without actually being that string
@@ -257,9 +257,9 @@ func get_character_names(beginning_with: String) -> PackedStringArray:
 	var lines = text.split("\n")
 	for line in lines:
 		if ": " in line:
-			var name: String = WEIGHTED_RANDOM_PREFIX.sub(line.split(": ")[0].strip_edges(), "")
-			if not name in names and matches_prompt(beginning_with, name):
-				names.append(name)
+			var c_name: String = WEIGHTED_RANDOM_PREFIX.sub(line.split(": ")[0].strip_edges(), "")
+			if not c_name in names and matches_prompt(beginning_with, c_name):
+				names.append(c_name)
 	return names
 
 
@@ -291,12 +291,12 @@ func insert_bbcode(open_tag: String, close_tag: String = "") -> void:
 
 # Insert text at current caret position
 # Move Caret down 1 line if not => END
-func insert_text_at_cursor(text: String) -> void:
-	if text != "=> END":
-		insert_text_at_caret(text+"\n")
+func insert_text_at_cursor(new_text: String) -> void:
+	if new_text != "=> END":
+		insert_text_at_caret(new_text+"\n")
 		set_caret_line(get_caret_line()+1)
 	else:
-		insert_text_at_caret(text)
+		insert_text_at_caret(new_text)
 	grab_focus()
 
 
@@ -432,7 +432,7 @@ func _on_code_edit_symbol_validate(symbol: String) -> void:
 	set_symbol_lookup_word_as_valid(false)
 
 
-func _on_code_edit_symbol_lookup(symbol: String, line: int, column: int) -> void:
+func _on_code_edit_symbol_lookup(symbol: String, _line: int, _column: int) -> void:
 	if symbol.begins_with("res://") and symbol.ends_with(".dialogue"):
 		external_file_requested.emit(symbol, "")
 	else:
@@ -452,7 +452,7 @@ func _on_code_edit_caret_changed() -> void:
 	last_selected_text = get_selected_text()
 
 
-func _on_code_edit_gutter_clicked(line: int, gutter: int) -> void:
+func _on_code_edit_gutter_clicked(line: int, _gutter: int) -> void:
 	var line_errors = errors.filter(func(error): return error.line_number == line)
 	if line_errors.size() > 0:
 		error_clicked.emit(line)

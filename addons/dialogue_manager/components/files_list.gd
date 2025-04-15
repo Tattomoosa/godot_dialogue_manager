@@ -55,7 +55,7 @@ func focus_filter() -> void:
 func select_file(file: String) -> void:
 	list.deselect_all()
 	for i in range(0, list.get_item_count()):
-		var item_text = list.get_item_text(i).replace(MODIFIED_SUFFIX, "")
+		var item_text := list.get_item_text(i).replace(MODIFIED_SUFFIX, "")
 		if item_text == get_nice_file(file, item_text.count("/") + 1):
 			list.select(i)
 			last_selected_file_path = file

@@ -2,6 +2,7 @@
 extends HBoxContainer
 
 
+@warning_ignore("unused_signal")
 signal pressed()
 signal resource_changed(next_resource: Resource)
 
@@ -85,8 +86,8 @@ func _on_resource_button_pressed() -> void:
 	else:
 		build_menu()
 		menu.position = get_viewport().position + Vector2i(
-			button.global_position.x + button.size.x - menu.size.x,
-			2 + menu_button.global_position.y + button.size.y
+			int(button.global_position.x + button.size.x - menu.size.x),
+			int(2 + menu_button.global_position.y + button.size.y)
 		)
 		menu.popup()
 
@@ -98,8 +99,8 @@ func _on_resource_button_resource_dropped(next_resource: Resource) -> void:
 func _on_menu_button_pressed() -> void:
 	build_menu()
 	menu.position = get_viewport().position + Vector2i(
-		menu_button.global_position.x + menu_button.size.x - menu.size.x,
-		2 + menu_button.global_position.y + menu_button.size.y
+		int(menu_button.global_position.x + menu_button.size.x - menu.size.x),
+		int(2 + menu_button.global_position.y + menu_button.size.y)
 	)
 	menu.popup()
 

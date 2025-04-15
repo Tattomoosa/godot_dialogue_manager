@@ -32,7 +32,7 @@ func _notification(what: int) -> void:
 			remove_theme_stylebox_override("hover")
 
 
-func _can_drop_data(at_position: Vector2, data) -> bool:
+func _can_drop_data(_at_position: Vector2, data) -> bool:
 	if typeof(data) != TYPE_DICTIONARY: return false
 	if data.type != "files": return false
 
@@ -40,7 +40,7 @@ func _can_drop_data(at_position: Vector2, data) -> bool:
 	return files.size() > 0
 
 
-func _drop_data(at_position: Vector2, data) -> void:
+func _drop_data(_at_position: Vector2, data) -> void:
 	var files: PackedStringArray = Array(data.files).filter(func(f): return f.get_extension() == "dialogue")
 
 	if files.size() == 0: return

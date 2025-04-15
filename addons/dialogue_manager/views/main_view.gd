@@ -235,15 +235,15 @@ func load_from_version_refresh(just_refreshed: Dictionary) -> void:
 	updated_dialog.popup_centered()
 
 
-func new_file(path: String, content: String = "") -> void:
+func new_file(path: String, file_content: String = "") -> void:
 	if open_buffers.has(path):
 		remove_file_from_open_buffers(path)
 
 	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
-	if content == "":
+	if file_content == "":
 		file.store_string(DMSettings.get_setting(DMSettings.NEW_FILE_TEMPLATE, ""))
 	else:
-		file.store_string(content)
+		file.store_string(file_content)
 
 	EditorInterface.get_resource_filesystem().scan()
 
@@ -347,10 +347,10 @@ func remove_file_from_open_buffers(path: String) -> void:
 # Apply theme colors and icons to the UI
 func apply_theme() -> void:
 	if is_instance_valid(plugin) and is_instance_valid(code_edit):
-		var scale: float = EditorInterface.get_editor_scale()
+		var editor_scale: float = EditorInterface.get_editor_scale()
 		var editor_settings = EditorInterface.get_editor_settings()
 		code_edit.theme_overrides = {
-			scale = scale,
+			scale = editor_scale,
 
 			background_color = editor_settings.get_setting("text_editor/theme/highlighting/background_color"),
 			current_line_color = editor_settings.get_setting("text_editor/theme/highlighting/current_line_color"),
@@ -439,13 +439,13 @@ func apply_theme() -> void:
 		popup.add_icon_item(get_theme_icon("AssetLib", "EditorIcons"), DMConstants.translate(&"import_from_csv"), TRANSLATIONS_IMPORT_FROM_CSV)
 
 		# Dialog sizes
-		new_dialog.min_size = Vector2(600, 500) * scale
-		save_dialog.min_size = Vector2(600, 500) * scale
-		open_dialog.min_size = Vector2(600, 500) * scale
-		quick_open_dialog.min_size = Vector2(400, 600) * scale
-		export_dialog.min_size = Vector2(600, 500) * scale
-		import_dialog.min_size = Vector2(600, 500) * scale
-		find_in_files_dialog.min_size = Vector2(800, 600) * scale
+		new_dialog.min_size = Vector2(600, 500) * editor_scale
+		save_dialog.min_size = Vector2(600, 500) * editor_scale
+		open_dialog.min_size = Vector2(600, 500) * editor_scale
+		quick_open_dialog.min_size = Vector2(400, 600) * editor_scale
+		export_dialog.min_size = Vector2(600, 500) * editor_scale
+		import_dialog.min_size = Vector2(600, 500) * editor_scale
+		find_in_files_dialog.min_size = Vector2(800, 600) * editor_scale
 
 
 ### Helpers
@@ -500,7 +500,7 @@ func show_build_error_dialog() -> void:
 # Generate translation line IDs for any line that doesn't already have one
 func generate_translations_keys() -> void:
 	randomize()
-	seed(Time.get_unix_time_from_system())
+	seed(int(Time.get_unix_time_from_system()))
 
 	var cursor: Vector2 = code_edit.get_cursor()
 	var lines: PackedStringArray = code_edit.text.split("\n")
@@ -712,7 +712,7 @@ func export_character_names_to_csv(path: String) -> void:
 	# Start a new file
 	file = FileAccess.open(path, FileAccess.WRITE)
 
-	if not file.file_exists(path):
+	if not FileAccess.file_exists(path):
 		file.store_csv_line(["keys", DMSettings.get_setting(DMSettings.DEFAULT_CSV_LOCALE, "en")])
 
 	# Write our translations to file
@@ -811,11 +811,10 @@ func show_search_form(is_enabled: bool) -> void:
 ### Signals
 
 
-func _on_files_moved(old_file: String, new_file: String) -> void:
-	if open_buffers.has(old_file):
-		open_buffers[new_file] = open_buffers[old_file]
-		open_buffers.erase(old_file)
-		open_buffers[new_file]
+func _on_files_moved(old_filename: String, new_filename: String) -> void:
+	if open_buffers.has(old_filename):
+		open_buffers[new_filename] = open_buffers[old_filename]
+		open_buffers.erase(old_filename)
 
 
 func _on_cache_file_content_changed(path: String, new_content: String) -> void:
@@ -992,8 +991,8 @@ func _on_code_edit_text_changed() -> void:
 	parse_timer.start(1)
 
 
-func _on_code_edit_scroll_changed(value: int) -> void:
-	DMSettings.set_scroll(current_file_path, code_edit.scroll_vertical)
+func _on_code_edit_scroll_changed(_value: int) -> void:
+	DMSettings.set_scroll(current_file_path, int(code_edit.scroll_vertical))
 
 
 func _on_code_edit_active_title_change(title: String) -> void:
@@ -1151,5 +1150,5 @@ func _on_close_confirmation_dialog_custom_action(action: StringName) -> void:
 
 func _on_find_in_files_result_selected(path: String, cursor: Vector2, length: int) -> void:
 	open_file(path)
-	code_edit.select(cursor.y, cursor.x, cursor.y, cursor.x + length)
-	code_edit.set_line_as_center_visible(cursor.y)
+	code_edit.select(int(cursor.y), int(cursor.x), int(cursor.y), int(cursor.x) + length)
+	code_edit.set_line_as_center_visible(int(cursor.y))

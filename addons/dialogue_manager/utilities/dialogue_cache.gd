@@ -1,6 +1,7 @@
 class_name DMCache extends Node
 
 
+@warning_ignore("unused_signal")
 signal file_content_changed(path: String, new_content: String)
 
 

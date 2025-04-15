@@ -59,15 +59,15 @@ func _enter_tree() -> void:
 			var plugin_path: String = get_plugin_path()
 			var balloon_file_names: PackedStringArray = ["example_balloon.tscn", "small_example_balloon.tscn"]
 			for balloon_file_name: String in balloon_file_names:
-				var balloon_path: String = plugin_path + "/example_balloon/" + balloon_file_name
-				var balloon_content: String = FileAccess.get_file_as_string(balloon_path)
+				var example_balloon_path: String = plugin_path + "/example_balloon/" + balloon_file_name
+				var balloon_content: String = FileAccess.get_file_as_string(example_balloon_path)
 				if "example_balloon.gd" in balloon_content and DMSettings.check_for_dotnet_solution():
 					balloon_content = balloon_content \
 						# Replace script path with the C# one
 						.replace("example_balloon.gd", "ExampleBalloon.cs") \
 						# Replace script UID with the C# one
 						.replace(ResourceUID.id_to_text(ResourceLoader.get_resource_uid(plugin_path + "/example_balloon/example_balloon.gd")), ResourceUID.id_to_text(ResourceLoader.get_resource_uid(plugin_path + "/example_balloon/ExampleBalloon.cs")))
-					var balloon_file: FileAccess = FileAccess.open(balloon_path, FileAccess.WRITE)
+					var balloon_file: FileAccess = FileAccess.open(example_balloon_path, FileAccess.WRITE)
 					balloon_file.store_string(balloon_content)
 					balloon_file.close()
 				elif "ExampleBalloon.cs" in balloon_content and not DMSettings.check_for_dotnet_solution():
@@ -76,7 +76,7 @@ func _enter_tree() -> void:
 						.replace("ExampleBalloon.cs", "example_balloon.gd") \
 						# Replace script UID with the GDScript one
 						.replace(ResourceUID.id_to_text(ResourceLoader.get_resource_uid(plugin_path + "/example_balloon/ExampleBalloon.cs")), ResourceUID.id_to_text(ResourceLoader.get_resource_uid(plugin_path + "/example_balloon/example_balloon.gd")))
-					var balloon_file: FileAccess = FileAccess.open(balloon_path, FileAccess.WRITE)
+					var balloon_file: FileAccess = FileAccess.open(example_balloon_path, FileAccess.WRITE)
 					balloon_file.store_string(balloon_content)
 					balloon_file.close()
 

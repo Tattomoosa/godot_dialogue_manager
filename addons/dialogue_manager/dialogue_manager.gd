@@ -1,14 +1,22 @@
 extends Node
 
+@warning_ignore("shadowed_global_identifier")
 const DialogueResource = preload("./dialogue_resource.gd")
+@warning_ignore("shadowed_global_identifier")
 const DialogueLine = preload("./dialogue_line.gd")
+@warning_ignore("shadowed_global_identifier")
 const DialogueResponse = preload("./dialogue_response.gd")
 
+@warning_ignore("shadowed_global_identifier")
 const DMConstants = preload("./constants.gd")
 const Builtins = preload("./utilities/builtins.gd")
+@warning_ignore("shadowed_global_identifier")
 const DMSettings = preload("./settings.gd")
+@warning_ignore("shadowed_global_identifier")
 const DMCompiler = preload("./compiler/compiler.gd")
+@warning_ignore("shadowed_global_identifier")
 const DMCompilerResult = preload("./compiler/compiler_result.gd")
+@warning_ignore("shadowed_global_identifier")
 const DMResolvedLineData = preload("./compiler/resolved_line_data.gd")
 
 
@@ -1392,15 +1400,15 @@ func _thing_has_property(thing: Object, property: String) -> bool:
 func _get_method_info_for(thing: Variant, method: String, args: Array) -> Dictionary:
 	# Use the thing instance id as a key for the caching dictionary.
 	var thing_instance_id: int = thing.get_instance_id()
+	var methods: Dictionary = {}
 	if not _method_info_cache.has(thing_instance_id):
-		var methods: Dictionary = {}
 		for m in thing.get_method_list():
 			methods["%s:%d" % [m.name, m.args.size()]] = m
 			if not methods.has(m.name):
 				methods[m.name] = m
 		_method_info_cache[thing_instance_id] = methods
-
-	var methods: Dictionary = _method_info_cache.get(thing_instance_id, {})
+	else:
+		methods = _method_info_cache[thing_instance_id]
 	var method_key: String = "%s:%d" % [method, args.size()]
 	if methods.has(method_key):
 		return methods.get(method_key)

@@ -2,6 +2,7 @@ class_name BaseDialogueTestScene extends Node2D
 
 
 const DialogueSettings = preload("./settings.gd")
+@warning_ignore("shadowed_global_identifier")
 const DialogueResource = preload("./dialogue_resource.gd")
 
 
